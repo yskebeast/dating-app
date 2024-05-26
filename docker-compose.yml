@@ -30,8 +30,6 @@ services:
     volumes:
       # 設定ファイルディレクトリにマウントする
       - ./mysql/conf.d:/etc/mysql/conf.d
-      # DB初期化ディレクトリにマウントする
-      - ./mysql/init.d:/docker-entrypoint-initdb.d
     # ネットワーク
     networks:
       - default
