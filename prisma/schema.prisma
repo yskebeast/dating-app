@@ -4,6 +4,7 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +12,125 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+// -- 顧客テーブル (customers)
+model customers {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// likesテーブル
+model likes {
+  id            Int           @id @default(autoincrement())
+  customer_id   Int
+  target_id     Int
+  target_type   String
+  reaction_type ReactionType
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
+}
+
+enum ReactionType {
+  good
+  bad
+}
+
+// マッチングテーブル (matchings)
+model matchings {
+  id           Int      @id @default(autoincrement())
+  customer1_id Int
+  customer2_id Int
+  status       MatchingStatus
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  // customer1    customers @relation(name: "MatchingCustomer1", fields: [customer1_id], references: [id])
+  // customer2    customers @relation(name: "MatchingCustomer2", fields: [customer2_id], references: [id])
+}
+
+enum MatchingStatus {
+  matched
+  unmatched
+}
+
+// チャット部屋テーブル (chat_rooms)
+model chat_rooms {
+  id         Int      @id @default(autoincrement())
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+// 顧客とチャット部屋の関連テーブル (chat_room_users)
+model chat_room_users {
+  id           Int      @id @default(autoincrement())
+  customer_id  Int
+  chat_room_id Int
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  // customer     customers @relation(fields: [customer_id], references: [id])
+  // chat_room    chat_rooms @relation(fields: [chat_room_id], references: [id])
+}
+
+// チャットテーブル (chat_messages)
+model chat_messages {
+  id           Int      @id @default(autoincrement())
+  chat_room_id Int
+  sender_id    Int
+  message      String
+  created_at   DateTime @default(now())
+  // chat_room    chat_rooms @relation(fields: [chat_room_id], references: [id])
+  // sender       customers @relation(fields: [sender_id], references: [id])
+}
+
+// ログインテーブル (logins)
+model logins {
+  id            Int      @id @default(autoincrement())
+  customer_id   Int
+  login_time    DateTime
+  logout_time   DateTime?
+  // customer      customers @relation(fields: [customer_id], references: [id])
+}
+
+// プロフィール情報テーブル (profiles)
+model profiles {
+  id           Int      @id @default(autoincrement())
+  customer_id  Int
+  bio          String?
+  age          Int?
+  gender       Gender?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  // customer     customers @relation(fields: [customer_id], references: [id])
+}
+
+enum Gender {
+  male
+  female
+  other
+}
+
+// 画像テーブル (images)
+model images {
+  id           Int      @id @default(autoincrement())
+  customer_id  Int
+  url          String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  // customer     customers @relation(fields: [customer_id], references: [id])
+}
+
+// ブロックリストテーブル (block_list)
+model block_list {
+  id                  Int      @id @default(autoincrement())
+  customer_id         Int
+  blocked_customer_id Int
+  reason              String?
+  created_at          DateTime @default(now())
+  // customer            customers @relation(fields: [customer_id], references: [id])
+  // blocked_customer    customers @relation(fields: [blocked_customer_id], references: [id])
 }
