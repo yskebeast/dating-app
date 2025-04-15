@@ -1,3 +1,4 @@
+import { signIn } from "@/auth";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 
 export default function Page() {
@@ -19,8 +20,18 @@ export default function Page() {
       >
         <TextField label="メールアドレス" />
         <TextField label="パスワード" />
-        <Button variant="contained">ログイン</Button>
+        <Button variant="contained" type="submit">
+          ログイン
+        </Button>
       </Stack>
+      <form
+        action={async () => {
+          "use server";
+          await signIn("github");
+        }}
+      >
+        <Button type="submit">Signin with GitHub</Button>
+      </form>
     </Stack>
   );
 }

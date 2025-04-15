@@ -10,7 +10,7 @@ export const authConfig: NextAuthConfig = {
       clientSecret: process.env.GITHUB_SECRET!,
     }),
   ],
-  // secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 
   pages: {
     signIn: "/login",
