@@ -2,6 +2,7 @@ import { signIn } from "@/auth";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 
 export default function Page() {
+  console.log("login page");
   return (
     <Stack
       height="100lvh"
